@@ -13,7 +13,8 @@ This repository was built and tested using the `2.0.0-dev.63.0` SDK.
 [1]: https://pub.dartlang.org/documentation/js/latest/
 [2]: https://api.dartlang.org/dev/2.0.0-dev.63.0/dart-js/dart-js-library.html
 
-* [Why `package:js`](#why-package-js)
+* [Running the tests](#running-the-tests)
+* [Why `package:js`](#why-packagejs)
 * [Examples](#examples)
   * [Basic Interop](#basic-interop)
     * [Invoking a method](#invoking-a-method)
