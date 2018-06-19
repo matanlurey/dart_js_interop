@@ -1,0 +1,26 @@
+<html>
+  <body>
+    <script>
+      /**
+       * Returns the result of adding two numbers.
+       * @param a
+       * @param b
+       * @returns {Number}
+       */
+      function addNumbers(a, b) {
+        return a + b;
+      }
+
+      function Animal(name) {
+        this.name = name;
+      }
+      Animal.prototype.talk = function() {
+        return 'I am a ' + this.name;
+      };
+    </script>
+
+    <!-- Scaffolding for tests. Not required in real applications. -->
+    <script src="packages/test/dart.js"></script>
+    <link href="basic_interop_test.dart" rel="x-dart-test" />
+  </body>
+</html>
