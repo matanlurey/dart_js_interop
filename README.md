@@ -2,10 +2,6 @@
 
 A series of tests and samples of using JS interop with Dart 2.
 
-The samples here _only_ utilize [`package:js`][1], not [`dart:js`][2], the
-latter of which is (soft) deprecated and additional updates are not expected.
-Where possible, examples of migrating from `dart:js` to `package:js` are shown.
-
 This repository was built and tested using the `2.0.0-dev.63.0` SDK.
 
 **NOTE**: This repository is not an official resource.
