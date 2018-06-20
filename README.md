@@ -71,7 +71,9 @@ Using `package:js` has a number of small requirements:
   ```
 
 * To auto-generate typed wrappers, place an `@JS()` annotation on either a:
+
   * Top-level `external` method:
+
 
   ```dart
   @JS()
@@ -86,6 +88,7 @@ Using `package:js` has a number of small requirements:
 
   * Top-level `external` getter, or setter:
 
+
   ```dart
   @JS()
   library interop_lib;
@@ -98,6 +101,7 @@ Using `package:js` has a number of small requirements:
   ```
 
   * Class delcaration:
+
 
   ```dart
   @JS()
