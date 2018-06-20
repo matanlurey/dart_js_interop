@@ -1,0 +1,26 @@
+<html>
+  <body>
+    <script>
+      function invokeCallback(callback) {
+        callback();
+      }
+      function Kennel() {
+        this.dogs = ['Spot', 'Fido'];
+      }
+      function fetchGoodBoy(callback) {
+        callback('All dogs are good boys!');
+      }
+      function fetchGoodBoys(callback, options) {
+        callback('Fido');
+        callback('Spot');
+        if (options.onDone) {
+          options.onDone();
+        }
+      }
+    </script>
+
+    <!-- Scaffolding for tests. Not required in real applications. -->
+    <script src="packages/test/dart.js"></script>
+    <link href="advanced_interop_test.dart" rel="x-dart-test" />
+  </body>
+</html>
