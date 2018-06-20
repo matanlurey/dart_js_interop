@@ -20,12 +20,12 @@ This repository was built and tested using the `2.0.0-dev.63.0` SDK.
     * [Creating an unstructured object](#creating-an-unstructured-object)
   * [Advanced Interop](#advanced-interop)
     * [Passing a callback](#passing-a-callback)
-    * [Createing a wrapper class](#creating-a-wrapper-class)
+    * [Creating a wrapper class](#creating-a-wrapper-class)
     * [Converting a callback-based API to return a `Future`](#converting-a-callback-based-api-to-return-a-future)
     * [Converting a callback-based API to return a `Stream`](#converting-a-callback-based-api-to-return-a-stream)
 * [Limitations](#limitations)
   * [Using ES Modules](#using-es-modules)
-  * [Using Web Components](#using-web-components)
+  * [Creating Web Components](#creating-web-components)
 
 ## Running the tests
 
@@ -500,5 +500,7 @@ All JS APIs must exist in the global namespace (`window` in the browser).
 Creating [Web Components][4] are not supported.
 
 These require more tie-ins with the compilers than JS interop can provide.
+_However_, consuming web components works perfectly fine - you can re-use any
+web components authored in another JS framework or vanilla JS.
 
 [4]: https://developer.mozilla.org/en-US/docs/Web/Web_Components
