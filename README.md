@@ -23,7 +23,8 @@ This repository was built and tested using the `2.0.0-dev.63.0` SDK.
     * [Creating a wrapper class](#creating-a-wrapper-class)
     * [Converting a callback-based API to return a `Future`](#converting-a-callback-based-api-to-return-a-future)
     * [Converting a callback-based API to return a `Stream`](#converting-a-callback-based-api-to-return-a-stream)
-* [Limitations](#limitations)
+* [Limitations and Known Issues](#limitations-and-known-issues)
+  * [Generic Type Arguments][#generic-type-arguments]
   * [Using ES Modules](#using-es-modules)
   * [Creating Web Components](#creating-web-components)
 
@@ -40,6 +41,14 @@ To run all of the tests in Dart2JS:
 ```bash
 $ pub run build_runner test -r
 ```
+
+To run all of the tests in Dart2JS with spec-compliance mode:
+
+```bash
+$ pub run build_runner test -r -c spec
+```
+
+(This disables the `--omit-implicit-checks` flag)
 
 ## Why `package:js`?
 
@@ -368,6 +377,8 @@ For example, JavaScript does not have reified generics (every instance of `List`
 which is backed by an `Array` has a type argument of `dynamic`). In the below
 example, `dogs` is a `List<dynamic>`, not the expected `List<String>`.
 
+_(See [Generic Type Arguments][#generic-type-arguments] for known issues.)_
+
 ```js
 // lib.js
 
@@ -479,13 +490,65 @@ Stream<String> fetchGoodBoys() {
 }
 ```
 
-## Limitations
+## Limitations and Known Issues
+
+_See `test/known_issues_test.dart`._
 
 The following are known limitations of JS interop at the time of writing this
 repository. If you have a tight deadline project or strict requirements to use
 these features I'd consider writing your own "shims" in JavaScript or TypeScript
 and calling into them from Dart, versus trying to use Dart's JS interop
 directly.
+
+### Generic Type Arguments
+
+Exposing and using types with reified generic type arguments is not fully
+supported by JS interop, and may be inconsistent depending on the compiler and
+compiler options used. The only _safe_ route is to _always_ assume that generic
+type arguments are not supplied (i.e. are bound to `dynamic`) and use
+conversions and casts in [wrapper code](#creating-a-wrapper-class) where
+desired.
+
+#### Type annotating external APIs
+
+```js
+// lib.js
+
+window.listOfDogs = ['Fido', 'Spot'];
+```
+
+```dart
+// lib.dart
+
+@JS()
+library lib;
+
+import 'package:js/js.dart';
+
+@JS()
+external List<String> get listOfDogs;
+
+void main() {
+  // Always true.
+  print(listOfDogs is List);
+
+  // Always false.
+  print(listOfDogs is List<String>);
+
+  // Succeeds in DartDevC, Dart2JS with --omit-implicit-checks
+  // Fails (throws `TypeError`) in Dart2JS without --omit-implicit-checks
+  Object upcast = listOfDogs;
+  List<String> dogs = upcast;
+
+  // Always fails (throws either `CastError` in DDC or `TypeError` in Dart2JS)
+  Object upcast = listOfDogs;
+  var dogs = upcast as List<String>;
+
+  // Succeeds in DartDevC, Dart2JS with --omit-implicit-checks
+  // Fails (throws `TypeError`) in Dart2JS without --omit-implicit-checks
+  listOfDogs.map((dog) => '$dog').toList();
+}
+```
 
 ### Using ES Modules
 
