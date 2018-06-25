@@ -24,7 +24,7 @@ This repository was built and tested using the `2.0.0-dev.63.0` SDK.
     * [Converting a callback-based API to return a `Future`](#converting-a-callback-based-api-to-return-a-future)
     * [Converting a callback-based API to return a `Stream`](#converting-a-callback-based-api-to-return-a-stream)
 * [Limitations and Known Issues](#limitations-and-known-issues)
-  * [Generic Type Arguments][#generic-type-arguments]
+  * [Generic Type Arguments](#generic-type-arguments)
   * [Using ES Modules](#using-es-modules)
   * [Creating Web Components](#creating-web-components)
 
