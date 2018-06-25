@@ -5,7 +5,13 @@ library test.knonwn_issues;
 import 'package:js/js.dart';
 import 'package:test/test.dart';
 
-// Hack to detect whether --omit-implicit-checks is enabled.
+// Hack to detect whether we are running in DDC or Dart2JS.
+@JS(r'$dartLoader')
+external Object get _$dartLoader;
+final bool isDartDevC = _$dartLoader != null;
+final bool isDart2JS = !isDartDevC;
+
+// Hack to detect whether Dart2JS's --omit-implicit-checks is enabled.
 final bool omitImplicitChecks = (() {
   try {
     Object notAString = 5;
@@ -15,6 +21,23 @@ final bool omitImplicitChecks = (() {
     return false;
   }
 })();
+
+// Hack to detect whether DartDevC's --ignore-cast-failures is enabled.
+//
+// --ignore-cast-failures allows ignoring almost any implicit cast failure
+// from C<dynmaic> to C<T>. Otherwise only a small set of whitelisted types
+// ignore cast failures.
+final bool ignoreCastFailures = (() {
+  try {
+    final ofDynamic = new _CastMe();
+    _CastMe<String> ofString = ofDynamic;
+    return ofString != null;
+  } on TypeError catch (_) {
+    return false;
+  }
+})();
+
+class _CastMe<T> {}
 
 @JS()
 external List<String> get listOfDogs;
@@ -30,6 +53,12 @@ abstract class HasValueField {
 external List<HasValueField> get listOfValues;
 
 void main() {
+  print('Compiler: ${isDartDevC ? 'DartDevC' : 'Dart2JS'}');
+  if (!isDartDevC) {
+    print('omitImplicitChecks: $omitImplicitChecks');
+  } else {
+    print('ignoreCastFailures: $ignoreCastFailures');
+  }
   group('treating JSArray as JSArray<String>', () {
     test('succeeds implicitly', () {
       List<String> dogs = listOfDogs;
@@ -61,7 +90,7 @@ void main() {
         listOfDogs.map((String dog) => '$dog').toList();
       }
 
-      if (omitImplicitChecks) {
+      if (isDartDevC || isDart2JS && omitImplicitChecks) {
         test('succeeds', () {
           expect(callMapMethod, returnsNormally);
         });
@@ -74,7 +103,7 @@ void main() {
   });
 
   group('treating JSArray as JSArray<JSType>', () {
-    if (omitImplicitChecks) {
+    if (isDart2JS && omitImplicitChecks) {
       test('succeeds implicitly', () {
         final Object upcastList = listOfValues;
         expect(() {
@@ -83,7 +112,7 @@ void main() {
         }, returnsNormally);
       });
     } else {
-      test('fails implicitly without --omit-implicit-checks', () {
+      test('fails implicitly in DartDevC or Dart2JS without --omit-implicit-checks', () {
         final Object upcastList = listOfValues;
         expect(() {
           List<HasValueField> dogs = upcastList;
@@ -117,10 +146,9 @@ void main() {
     group('during a .map call', () {
       void callMapMethod() {
         listOfValues.map((dog) => '${dog.value}').toList();
-        listOfValues.map((HasValueField dog) => '${dog.value}').toList();
       }
 
-      if (omitImplicitChecks) {
+      if (isDartDevC || isDart2JS && omitImplicitChecks) {
         test('succeeds', () {
           expect(callMapMethod, returnsNormally);
         });
