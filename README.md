@@ -535,9 +535,9 @@ void main() {
   // Always false.
   print(listOfDogs is List<String>);
 
+  Object upcast = listOfDogs;
   // Succeeds in DartDevC, Dart2JS with --omit-implicit-checks
   // Fails (throws `TypeError`) in Dart2JS without --omit-implicit-checks
-  Object upcast = listOfDogs;
   List<String> dogs = upcast;
 
   // Always fails (throws either `CastError` in DDC or `TypeError` in Dart2JS)

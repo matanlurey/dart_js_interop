@@ -27,6 +27,7 @@ final bool omitImplicitChecks = (() {
 // --ignore-cast-failures allows ignoring almost any implicit cast failure
 // from C<dynmaic> to C<T>. Otherwise only a small set of whitelisted types
 // ignore cast failures.
+class _CastMe<T> {}
 final bool ignoreCastFailures = (() {
   try {
     final ofDynamic = new _CastMe();
@@ -36,8 +37,6 @@ final bool ignoreCastFailures = (() {
     return false;
   }
 })();
-
-class _CastMe<T> {}
 
 @JS()
 external List<String> get listOfDogs;
@@ -52,6 +51,29 @@ abstract class HasValueField {
 @JS()
 external List<HasValueField> get listOfValues;
 
+@JS()
+abstract class JSContainer<T> {
+  external factory JSContainer(T value);
+
+  external T get value;
+}
+
+@JS()
+external JSContainer<String> get valueOfFoo;
+
+// We need at least one example of using a JS-type that is not a Dart object
+// (and not something special cased like `JSArray`) to see how something fails
+// at runtime/compile-time.
+@JS()
+@anonymous
+abstract class AnonymousJSContainer<T> {
+  external factory AnonymousJSContainer({T value});
+  external T get value;
+}
+
+@JS()
+external AnonymousJSContainer<String> get valueOfHelloWorld;
+
 void main() {
   print('Compiler: ${isDartDevC ? 'DartDevC' : 'Dart2JS'}');
   if (!isDartDevC) {
@@ -59,6 +81,7 @@ void main() {
   } else {
     print('ignoreCastFailures: $ignoreCastFailures');
   }
+
   group('treating JSArray as JSArray<String>', () {
     test('succeeds implicitly', () {
       List<String> dogs = listOfDogs;
@@ -157,6 +180,56 @@ void main() {
           expect(callMapMethod, _throwsTypeOrCastError);
         });
       }
+    });
+  });
+
+  group('treating a JSType as if it has a type argument <T>', () {
+    test('succeeds implicitly', () {
+      final Object upcastValue = valueOfFoo;
+      final JSContainer<String> container = upcastValue;
+      expect(container.value, 'Foo');
+    });
+
+    test('succeeds explicitly', () {
+      final Object upcastValue = valueOfFoo;
+      final container = upcastValue as JSContainer<String>;
+      expect(container.value, 'Foo');
+    });
+
+    test('has a <T> where T = String', () {
+      Type extractType<T>(JSContainer<T> j) => T;
+      expect(extractType(valueOfFoo), String);
+    });
+
+    test('should allow creating a new instance', () {
+      final newInstance = new JSContainer(5);
+      expect(newInstance is JSContainer<int>, isTrue);
+      expect(newInstance.value, 5);
+    });
+  });
+
+  group('treating an @anonymous JSType as if it has a type argument <T>', () {
+    test('succeeds implicitly', () {
+      final Object upcastValue = valueOfHelloWorld;
+      final AnonymousJSContainer<String> container = upcastValue;
+      expect(container.value, 'Hello World');
+    });
+
+    test('succeeds explicitly', () {
+      final Object upcastValue = valueOfHelloWorld;
+      final container = upcastValue as AnonymousJSContainer<String>;
+      expect(container.value, 'Hello World');
+    });
+
+    test('has a <T> where T = String', () {
+      Type extractType<T>(AnonymousJSContainer<T> j) => T;
+      expect(extractType(valueOfHelloWorld), String);
+    });
+
+    test('should allow creating a new instance', () {
+      final newInstance = new AnonymousJSContainer(value: 5);
+      expect(newInstance is AnonymousJSContainer<int>, isTrue);
+      expect(newInstance.value, 5);
     });
   });
 }

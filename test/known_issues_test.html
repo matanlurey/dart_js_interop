@@ -6,6 +6,13 @@
         {value: 'Fido'},
         {value: 'Spot'},
       ];
+      window.JSContainer = function JSContainer(value){
+        this.value = value;
+      };
+      window.valueOfFoo = new JSContainer('Foo');
+      window.valueOfHelloWorld = {
+        value: 'Hello World',
+      };
     </script>
 
     <!-- Scaffolding for tests. Not required in real applications. -->
