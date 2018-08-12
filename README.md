@@ -286,6 +286,8 @@ Or for creating an _unstructured_ object (without dynamic fields):
 import 'package:js/js_util.dart' as js;
 
 void main() {
+  // if you are using dart SDK 2.0 then use this instead:
+  // var object = js.newObject();
   var object = js.createObject();
   js.setProperty(object, 'anyName', 'anyValue');
 }
