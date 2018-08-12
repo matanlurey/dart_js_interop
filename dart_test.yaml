@@ -1,2 +1,8 @@
 platforms:
   - chrome
+
+override_platforms:
+  chrome:
+    # The settings to override for this platform.
+    settings:
+      executable: chromium
