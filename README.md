@@ -2,7 +2,7 @@
 
 A series of tests and samples of using JS interop with Dart 2.
 
-This repository was built and tested using the `2.0.0-dev.63.0` SDK.
+This repository was built and tested using the `2.0.0` SDK.
 
 **NOTE**: This repository is not an official resource.
 
@@ -286,7 +286,7 @@ Or for creating an _unstructured_ object (without dynamic fields):
 import 'package:js/js_util.dart' as js;
 
 void main() {
-  var object = js.createObject();
+  var object = js.newObject();
   js.setProperty(object, 'anyName', 'anyValue');
 }
 ```
