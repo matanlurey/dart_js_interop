@@ -223,7 +223,7 @@ abstract class Animal {
 }
 
 void createAnimal() {
-  final animal = new Animal('Dog);
+  final animal = new Animal('Dog');
   print(animal.talk());
 }
 ```
@@ -236,7 +236,7 @@ void createAnimal() {
 > void createAnimal() {
 >   final JsFunction animalClass = context['Animal'];
 >   final animal = new JsObject(animalClass, ['Dog']);
->   print(animal.callMethod('talk));
+>   print(animal.callMethod('talk'));
 > }
 > ```
 
@@ -333,7 +333,7 @@ import 'package:js/js.dart';
 external void invokeCallback(void Function() callback);
 
 void main() {
-  invokeCallback(allowInterop(() => print('Called!)));
+  invokeCallback(allowInterop(() => print('Called!')));
 }
 ```
 
@@ -362,7 +362,7 @@ void main() {
 >
 > void main() {
 >   context.callMethod('invokeCallback', [
->     allowInterop(() => print('Called!)),
+>     allowInterop(() => print('Called!')),
 >   ]);
 > }
 > ```
