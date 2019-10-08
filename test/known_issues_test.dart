@@ -28,9 +28,10 @@ final bool omitImplicitChecks = (() {
 // from C<dynmaic> to C<T>. Otherwise only a small set of whitelisted types
 // ignore cast failures.
 class _CastMe<T> {}
+
 final bool ignoreCastFailures = (() {
   try {
-    final ofDynamic = new _CastMe();
+    final ofDynamic = _CastMe();
     _CastMe<String> ofString = ofDynamic;
     return ofString != null;
   } on TypeError catch (_) {
@@ -135,7 +136,9 @@ void main() {
         }, returnsNormally);
       });
     } else {
-      test('fails implicitly in DartDevC or Dart2JS without --omit-implicit-checks', () {
+      test(
+          'fails implicitly in DartDevC or Dart2JS without --omit-implicit-checks',
+          () {
         final Object upcastList = listOfValues;
         expect(() {
           List<HasValueField> dogs = upcastList;
@@ -202,7 +205,7 @@ void main() {
     });
 
     test('should allow creating a new instance', () {
-      final newInstance = new JSContainer(5);
+      final newInstance = JSContainer(5);
       expect(newInstance is JSContainer<int>, isTrue);
       expect(newInstance.value, 5);
     });
@@ -227,7 +230,7 @@ void main() {
     });
 
     test('should allow creating a new instance', () {
-      final newInstance = new AnonymousJSContainer(value: 5);
+      final newInstance = AnonymousJSContainer(value: 5);
       expect(newInstance is AnonymousJSContainer<int>, isTrue);
       expect(newInstance.value, 5);
     });

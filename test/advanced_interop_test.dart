@@ -20,15 +20,15 @@ abstract class _Kennel {
 }
 
 class Kennel {
-  final _jsKennel = new _Kennel();
-  List<String> get dogs => new List.from(_jsKennel.dogs);
+  final _jsKennel = _Kennel();
+  List<String> get dogs => List.from(_jsKennel.dogs);
 }
 
 @JS('fetchGoodBoy')
 external void _fetchGoodBoy(void Function(String) callback);
 
 Future<String> fetchGoodBoy() {
-  final completer = new Completer<String>();
+  final completer = Completer<String>();
   _fetchGoodBoy(allowInterop(completer.complete));
   return completer.future;
 }
@@ -43,10 +43,10 @@ abstract class _Options {
 }
 
 Stream<String> fetchGoodBoys() {
-  final controller = new StreamController<String>();
+  final controller = StreamController<String>();
   _fetchGoodBoys(
     allowInterop(controller.add),
-    new _Options(onDone: allowInterop(controller.close)),
+    _Options(onDone: allowInterop(controller.close)),
   );
   return controller.stream;
 }
@@ -63,7 +63,7 @@ void main() {
   });
 
   test('should wrap a JS class', () {
-    final kennel = new Kennel();
+    final kennel = Kennel();
     expect(kennel.dogs, const TypeMatcher<List<String>>());
   });
 

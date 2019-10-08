@@ -41,23 +41,23 @@ void main() {
   });
 
   test('should create a JS class', () {
-    final animal = new Animal('Dog');
+    final animal = Animal('Dog');
     expect(animal.talk(), 'I am a Dog');
   });
 
   test('should create a JS class [DEPRECATED]', () {
     final JsFunction animalClass = context['Animal'];
-    final animal = new JsObject(animalClass, ['Dog']);
+    final animal = JsObject(animalClass, ['Dog']);
     expect(animal.callMethod('talk'), 'I am a Dog');
   });
 
   test('should create an anonymous structured JS object', () {
-    final named = new ObjectWithName(name: 'Jill User');
+    final named = ObjectWithName(name: 'Jill User');
     expect(named.name, 'Jill User');
   });
 
   test('should create an anonymous structured JS object [DEPRECATED]', () {
-    final named = new JsObject.jsify({'name': 'Jill User'});
+    final named = JsObject.jsify({'name': 'Jill User'});
     expect(named['name'], 'Jill User');
   });
 
@@ -68,7 +68,7 @@ void main() {
   });
 
   test('should create an unstructured JS object [DEPRECATED]', () {
-    final named = new JsObject.jsify({});
+    final named = JsObject.jsify({});
     named['name'] = 'John User';
     expect(named['name'], 'John User');
   });
